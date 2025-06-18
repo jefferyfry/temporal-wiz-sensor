@@ -1,21 +1,21 @@
-# Temporal Wiz Sensor
+# Temporal Wiz Sensor Activity
 
-Reusable Temproral Wiz Sensor install activity for k8s to be used in your Temporal workflows.
+Reusable Wiz Sensor activity for k8s to be used in your Temporal workflows.
 
 ## Features
-- Install and validate Temporal Wiz Sensor on Kubernetes clusters.
+- Install and validate Wiz Sensor on Kubernetes clusters using Temporal Workflows.
 - Can be used in Temporal workflows to ensure the sensor is installed before proceeding with other activities.
 - Packaged as a Go Module
 
 ## Installation
-To use the Temporal Wiz Sensor in your Temporal workflows, you can install it as a Go module. Run the following command in your project directory:
+To use the Wiz Sensor in your Temporal workflows, you can install it as a Go module. Run the following command in your project directory:
 
 ```bash
 go get github.com/jefferyfry/temporal-wiz-sensor@v0.1.0
 ```
 
 ## Usage
-To use the Temporal Wiz Sensor in your Temporal workflows, you can import the package and use the `InstallSensor` activity. Here's an example of how to do this:
+To use the Wiz Sensor in your Temporal workflows, you can import the package and use the `InstallWizSensorActivity` activity. Here's an example of how to do this:
 
 ```go   
 package workflows
