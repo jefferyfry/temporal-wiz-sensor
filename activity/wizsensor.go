@@ -18,6 +18,7 @@ import (
 
 type WizSensorParams struct {
 	KubeconfigPath          string `json:"kubeconfigPath"`
+	KubeconfigContext       string `json:"kubeconfigContext"`
 	ImagePullSecretUsername string `json:"imagePullSecretUsername"`
 	ImagePullSecretPassword string `json:"imagePullSecretPassword"`
 	WizApiTokenClientId     string `json:"wizApiTokenClientId"`
@@ -27,7 +28,7 @@ type WizSensorParams struct {
 func InstallWizSensorActivity(ctx context.Context, params WizSensorParams) error {
 	namespace := "wiz"
 	releaseName := "wiz-sensor"
-	chartName := "wiz-sec/wiz-sensor"
+	chartName := "wiz-sensor"
 	repoUrl := "https://charts.wiz.io"
 
 	//check for kubeconfig
@@ -43,6 +44,7 @@ func InstallWizSensorActivity(ctx context.Context, params WizSensorParams) error
 	//helm cli settings
 	settings := cli.New()
 	settings.KubeConfig = params.KubeconfigPath
+	settings.KubeContext = params.KubeconfigContext
 	settings.SetNamespace(namespace)
 
 	// set up Helm
@@ -69,10 +71,14 @@ func InstallWizSensorActivity(ctx context.Context, params WizSensorParams) error
 
 	// Set the values for the chart
 	values := map[string]interface{}{
-		"imagePullSecret.username": params.ImagePullSecretUsername,
-		"imagePullSecret.password": params.ImagePullSecretPassword,
-		"wizApiToken.clientId":     params.WizApiTokenClientId,
-		"wizApiToken.clientToken":  params.WizApiTokenClientToken,
+		"imagePullSecret": map[string]interface{}{
+			"username": params.ImagePullSecretUsername,
+			"password": params.ImagePullSecretPassword,
+		},
+		"wizApiToken": map[string]interface{}{
+			"clientId":    params.WizApiTokenClientId,
+			"clientToken": params.WizApiTokenClientToken,
+		},
 	}
 
 	// run the Helm install

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"log"
 
 	"go.temporal.io/sdk/client"
@@ -23,27 +22,9 @@ func main() {
 	sensorWorker.RegisterWorkflow(workflow.DeploySensorWorkflow)
 	sensorWorker.RegisterActivity(activity.InstallWizSensorActivity)
 
+	log.Printf("Starting worker for task queue 'wiz-sensor-task-queue'...")
 	errWorker := sensorWorker.Run(nil)
 	if errWorker != nil {
 		log.Fatalf("Failed to start worker: %v", err)
 	}
-
-	// Execute the workflow as if this were another client
-	params := activity.WizSensorParams{
-		KubeconfigPath:          "/path/to/kubeconfig",
-		ImagePullSecretUsername: "your-username",
-		ImagePullSecretPassword: "your-password",
-		WizApiTokenClientId:     "your-client-id",
-		WizApiTokenClientToken:  "your-client-token",
-	}
-
-	we, errEx := temporalCl.ExecuteWorkflow(context.Background(), client.StartWorkflowOptions{
-		ID:        "deploy-wiz-sensor-workflow-001",
-		TaskQueue: "wiz-sensor-task-queue",
-	}, workflow.DeploySensorWorkflow, params)
-	if errEx != nil {
-		log.Fatalf("Failed to execute workflow: %v", errEx)
-	}
-
-	log.Printf("Workflow started successfully. Workflow ID: %s, Run ID: %s", we.GetID(), we.GetRunID())
 }
